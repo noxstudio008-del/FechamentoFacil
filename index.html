@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#176b45">
+<title>Fechamento Fácil</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">FF</span><div><strong>Fechamento Fácil</strong><small>Controle de cargas</small></div></div>
+  <button class="help" id="helpBtn">Ajuda</button>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">FECHAMENTO MENSAL</p>
+      <h1>Controle de cargas</h1>
+      <p class="subtitle">Registre viagens, calcule valores e organize o fechamento.</p>
+    </div>
+    <div class="month"><label for="month">Mês</label><input type="month" id="month"></div>
+  </section>
+
+  <section class="summary">
+    <article><span>CAMINHÕES</span><strong id="totalTrucks">0</strong></article>
+    <article><span>REGISTROS</span><strong id="totalRecords">0</strong></article>
+    <article class="money"><span>TOTAL</span><strong id="grandTotal">R$ 0,00</strong></article>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div><h2>Registros</h2><p>O total é calculado automaticamente: quantidade × preço.</p></div>
+      <button class="primary" id="addBtn">Novo registro</button>
+    </div>
+
+    <div class="filters">
+      <input id="search" type="search" placeholder="Pesquisar cliente ou cidade">
+      <select id="originFilter"><option value="">Todas as origens</option></select>
+      <select id="destinationFilter"><option value="">Todas as entregas</option></select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cliente</th><th>Caminhões</th><th>Origem</th><th>Entrega</th><th>Preço / caminhão</th><th>Total</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div id="mobileList" class="mobile-list"></div>
+
+    <div id="empty" class="empty"><h3>Nenhum registro encontrado</h3><p>Adicione uma carga para começar.</p><button class="primary" id="emptyBtn">Adicionar registro</button></div>
+    <div class="footer-total"><span>Total visível</span><strong id="footerTotal">R$ 0,00</strong></div>
+  </section>
+
+  <section class="actions">
+    <button class="secondary" id="demoBtn">Dados de exemplo</button>
+    <button class="secondary" id="clearBtn">Limpar</button>
+    <button class="primary" id="saveBtn">Salvar</button>
+    <button class="primary" id="exportBtn">Exportar CSV</button>
+  </section>
+
+  <section class="panel saved">
+    <div class="panel-head compact"><div><h2>Fechamentos salvos</h2><p>Histórico local deste navegador.</p></div></div>
+    <div id="history"></div>
+  </section>
+
+  <p class="note">Interface adaptada para celular e computador. Os dados ficam neste navegador.</p>
+</main>
+
+<div class="modal" id="modal"><div class="modal-box"><h2>Como usar</h2><p>Cadastre cada viagem com cliente, quantidade de caminhões, origem, destino e preço por caminhão. O sistema calcula cada total e o fechamento geral.</p><button class="primary" id="closeHelp">Entendi</button></div></div>
+<script src="script.js"></script>
+</body>
+</html>
