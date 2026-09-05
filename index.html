@@ -178,6 +178,10 @@ function updateVisibleTotals(){
   });
 }
 
+function saveCurrent(){
+  localStorage.setItem('ff_current',JSON.stringify({month:$('month').value,records}));
+}
+
 function render(){
   const list=filtered();
   $('tbody').innerHTML='';
@@ -187,7 +191,7 @@ function render(){
     const tr=document.createElement('tr');
     tr.innerHTML=`<td><input data-id="${r.id}" data-f="client" value="${esc(r.client)}" placeholder="Cliente"></td>
       <td><input type="date" data-id="${r.id}" data-f="date" value="${r.date}"></td>
-      <td><input type="number" min="0" data-id="${r.id}" data-f="quantity" value="${r.quantity||''}"></td>
+      <td><input type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" data-id="${r.id}" data-f="quantity" value="${r.quantity||''}"></td>
       <td><select data-id="${r.id}" data-f="type">
           <option value="Carreta" ${r.type==='Carreta'?'selected':''}>Carreta</option>
           <option value="Caminhão Truck" ${r.type==='Caminhão Truck'?'selected':''}>Caminhão Truck</option>
@@ -203,7 +207,7 @@ function render(){
       <div class="mobile-route">${esc(r.date)||'Sem data'} · ${esc(r.type)}</div>
       <div class="mobile-fields">
         <label>Data<input type="date" data-id="${r.id}" data-f="date" value="${r.date}"></label>
-        <label>Quantidade<input type="number" min="0" data-id="${r.id}" data-f="quantity" value="${r.quantity||''}"></label>
+        <label>Quantidade<input type="number" min="0" step="1" inputmode="numeric" pattern="[0-9]*" data-id="${r.id}" data-f="quantity" value="${r.quantity||''}"></label>
         <label>Tipo<select data-id="${r.id}" data-f="type">
             <option value="Carreta" ${r.type==='Carreta'?'selected':''}>Carreta</option>
             <option value="Caminhão Truck" ${r.type==='Caminhão Truck'?'selected':''}>Caminhão Truck</option>
@@ -217,6 +221,7 @@ function render(){
 
   $('empty').style.display=list.length?'none':'block';
   updateSummary(list);
+  saveCurrent();
 }
 
 document.addEventListener('input',e=>{
@@ -227,6 +232,7 @@ document.addEventListener('input',e=>{
   const f=e.target.dataset.f;
   r[f]=(f==='quantity'||f==='price')?(+e.target.value||0):e.target.value;
   updateVisibleTotals();
+  saveCurrent();
 });
 
 document.addEventListener('change',e=>{
@@ -332,8 +338,16 @@ $('modal').onclick=e=>{
   if(e.target===$('modal'))$('modal').classList.remove('open');
 };
 
+$('month').addEventListener('change',saveCurrent);
+
 const now=new Date();
-$('month').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+const savedCurrent=JSON.parse(localStorage.getItem('ff_current')||'null');
+if(savedCurrent&&savedCurrent.records&&savedCurrent.records.length){
+  records=savedCurrent.records.map(rec);
+  $('month').value=savedCurrent.month||`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+}else{
+  $('month').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+}
 render();
 renderHistory();
 </script>
