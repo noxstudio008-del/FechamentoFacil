@@ -287,9 +287,15 @@ $('saveBtn').onclick=()=>{
   alert('Fechamento salvo com sucesso.');
 };
 
+function formatMonth(m){
+  if(!m||!m.includes('-'))return m||'';
+  const [y,mo]=m.split('-');
+  return `${mo}/${y}`;
+}
+
 function renderHistory(){
   $('history').innerHTML=savedHistory.length
-    ?savedHistory.map(x=>`<div class="history-row"><div><strong>${esc(x.month)}</strong><small>${x.count} registros · ${money(x.total)} · salvo em ${esc(x.date||'')}</small></div><div class="history-actions"><button class="secondary" data-load="${x.id}">Abrir</button><button class="delete" data-delhist="${x.id}">Excluir</button></div></div>`).join('')
+    ?savedHistory.map(x=>`<div class="history-row"><div><strong>${esc(x.date||'')}</strong><small>${x.count} registros · ${money(x.total)}${x.month?` · Fechamento de ${esc(formatMonth(x.month))}`:''}</small></div><div class="history-actions"><button class="secondary" data-load="${x.id}">Abrir</button><button class="delete" data-delhist="${x.id}">Excluir</button></div></div>`).join('')
     :'<div class="history-row"><small>Nenhum fechamento salvo.</small></div>';
 }
 
