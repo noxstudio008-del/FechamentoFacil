@@ -31,7 +31,7 @@ td{border-top:1px solid var(--border);padding:9px 13px}td input,td select{width:
 .mobile-list{display:none}.empty{text-align:center;padding:42px 18px}.empty h3{margin:0 0 6px}.empty p{color:var(--muted);margin:0 0 16px;font-size:13px}
 .footer-total{display:flex;justify-content:flex-end;gap:25px;padding:17px 22px;border-top:1px solid var(--border);background:#fbfcfb}.footer-total strong{font-size:19px}
 .actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin:16px 0}.saved{margin-top:24px}
-.history-row{display:flex;justify-content:space-between;align-items:center;padding:13px 22px;border-top:1px solid var(--border);gap:15px}.history-row:first-child{border-top:0}.history-row strong{display:block;margin-bottom:3px}.history-row small{color:var(--muted)}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:13px 22px;border-top:1px solid var(--border);gap:15px}.history-row:first-child{border-top:0}.history-row strong{display:block;margin-bottom:3px}.history-row small{color:var(--muted)}.history-actions{display:flex;gap:8px;flex-shrink:0}
 .modal{display:none;position:fixed;inset:0;background:#0008;align-items:center;justify-content:center;padding:20px;z-index:10}.modal.open{display:flex}
 .modal-box{max-width:430px;background:#fff;border-radius:14px;padding:25px;box-shadow:0 15px 50px #0003}.modal-box p{color:var(--muted);line-height:1.6}.modal-box button{width:100%}
 @media(max-width:760px){
@@ -276,6 +276,7 @@ $('saveBtn').onclick=()=>{
   savedHistory.unshift({
     id:Date.now(),
     month,
+    date:new Date().toLocaleDateString('pt-BR'),
     count:records.length,
     total,
     records:JSON.parse(JSON.stringify(records))
@@ -288,9 +289,20 @@ $('saveBtn').onclick=()=>{
 
 function renderHistory(){
   $('history').innerHTML=savedHistory.length
-    ?savedHistory.map(x=>`<div class="history-row"><div><strong>${esc(x.month)}</strong><small>${x.count} registros · ${money(x.total)}</small></div><button class="secondary" data-load="${x.id}">Abrir</button></div>`).join('')
+    ?savedHistory.map(x=>`<div class="history-row"><div><strong>${esc(x.month)}</strong><small>${x.count} registros · ${money(x.total)} · salvo em ${esc(x.date||'')}</small></div><div class="history-actions"><button class="secondary" data-load="${x.id}">Abrir</button><button class="delete" data-delhist="${x.id}">Excluir</button></div></div>`).join('')
     :'<div class="history-row"><small>Nenhum fechamento salvo.</small></div>';
 }
+
+document.addEventListener('click',e=>{
+  const idh=e.target.dataset.delhist;
+  if(idh){
+    if(confirm('Excluir este fechamento salvo? Essa ação não pode ser desfeita.')){
+      savedHistory=savedHistory.filter(x=>String(x.id)!==String(idh));
+      localStorage.setItem('ff_history',JSON.stringify(savedHistory));
+      renderHistory();
+    }
+  }
+});
 
 document.addEventListener('click',e=>{
   const id=e.target.dataset.load;
